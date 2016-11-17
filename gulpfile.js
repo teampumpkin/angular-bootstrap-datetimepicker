@@ -10,6 +10,8 @@ var paths = require('./paths')
 var plato = require('plato')
 var Server = require('karma').Server
 var standard = require('gulp-standard')
+var uglify = require('gulp-uglify');
+var rename = require('gulp-rename');
 
 var karmaConfig = path.join(__dirname, 'karma.conf.js')
 
@@ -111,6 +113,16 @@ gulp.task('test', ['lint', 'css-lint'], function (done) {
   server.start()
 })
 
+gulp.task('minify', function () {
+  return gulp.src('src/js/*.js')
+    .pipe(uglify())
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(gulp.dest('dist'));
+});
+
+
+
+gulp.task('dist', ['templatecache', 'minify'])
 gulp.task('default', ['complexity', 'test'])
 
 function testConfig (options) {
